@@ -1,0 +1,50 @@
+Questão 1 — O mistério do acumulador (2,0 pontos)
+Observe o código abaixo e determine exatamente qual será a saída apresentada na tela.
+
+
+#include <stdio.h>
+
+int main() {
+    int i, j, x = 0;
+
+    for (i = 1; i <= 5; i++) {
+
+        for (j = 5; j >= i; j--) {
+
+            if ((i + j) % 2 == 0) {
+                x += i + j;
+            } else {
+                x -= i;
+            }
+
+            if (x % 3 == 0) {
+                x /= 2;
+            }
+        }
+
+        printf("%d ", x);
+    }
+
+    printf("\nResultado final: %d", x);
+
+    return 0;
+}
+
+
+a) Qual será a saída completa?
+4 7 10 11 10
+	Resultado final: 10
+b) Quantas vezes o laço interno será executado?	
+O laço interno será executado 15 vezes no total. Como o limite inferior de j depende de i (j >= i), a quantidade de repetições diminui a cada ciclo do laço externo (Observação: 5 vezes é a quantidade de execuções apenas do laço externo).	
+
+c) Em quais situações o valor de x será dividido por 2?
+O valor de x será dividido por 2 sempre que, logo após sofrer a operação de soma (x += i + j) ou subtração (x -= i) na repetição atual, o novo valor acumulado de x for um múltiplo de 3 (isto é, quando o resto da divisão inteira de x por 3 for igual a 0, condição x % 3 == 0). Durante a execução completa do programa, isso acontece em 6 momentos:
+i=1,j=5 (x=63)
+i=1,j=3 (x=63)
+i=2,j=3 (x=63)
+i=3,j=5 (x=157)
+i=4,j=5 (x=63)
+i=5,j=5 (x=2110)
+
+d) Explique por que não é possível calcular cada repetição considerando apenas os valores de i e j, sem observar o valor anterior de x.
+Porque x funciona como uma variável acumuladora com dependência de estado. Em cada repetição, x é atualizado somando-se ou subtraindo-se valores sobre o seu próprio conteúdo anterior (x += ... ou x -= ...), e o teste condicional seguinte (if (x % 3 == 0)) avalia diretamente esse novo resultado acumulado. Além disso, quando x é um múltiplo de 3 ímpar (como 15 ou 21), a divisão inteira x /= 2 trunca a parte decimal (15/2=7 e 21/2=10), alterando de forma irreversível a base de cálculo para a próxima  iteração. Sem conhecer o histórico de x, não há como saber qual valor será modificado nem se a condição de divisão por 2 será ativada.
